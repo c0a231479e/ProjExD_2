@@ -37,12 +37,20 @@ def Gameover(screen):
     screen.blit(cry_kk_img, [cry_kk_rct[0]+250,cry_kk_rct[1]])
     pg.display.update()
     time.sleep(5)
-    
+
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
     bg_img = pg.image.load("fig/pg_bg.jpg")    
     kk_img = pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 0.9)
+    FACING = {(-5,0): pg.transform.flip(pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 0.9),False,False),
+          (-5,5): pg.transform.flip(pg.transform.rotozoom(pg.image.load("fig/3.png"), 45, 0.9),False,False),
+          (0,5): pg.transform.flip(pg.transform.rotozoom(pg.image.load("fig/3.png"), 90, 0.9),True,False),
+          (5,5): pg.transform.flip(pg.transform.rotozoom(pg.image.load("fig/3.png"), 45, 0.9),True,False),
+          (5,0): pg.transform.flip(pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 0.9),True,False),
+          (5,-5): pg.transform.flip(pg.transform.rotozoom(pg.image.load("fig/3.png"), 315, 0.9),True,False),
+          (0,-5): pg.transform.flip(pg.transform.rotozoom(pg.image.load("fig/3.png"), 270, 0.9),True,False),
+          (-5,-5): pg.transform.flip(pg.transform.rotozoom(pg.image.load("fig/3.png"), 315, 0.9),False,False),}
     kk_rct = kk_img.get_rect()
     kk_rct.center = 300, 200
     bb_img = pg.Surface((20,20))
@@ -79,6 +87,8 @@ def main():
         kk_rct.move_ip(sum_mv)
         if check_bound(kk_rct) != (True,True):
             kk_rct.move_ip(-sum_mv[0],-sum_mv[1])
+        if sum_mv != [0,0]:
+            kk_img = FACING[(sum_mv[0],sum_mv[1])]
         screen.blit(kk_img, kk_rct)
         bb_rct.move_ip(vx,vy)
         yoko, tate = check_bound(bb_rct)
