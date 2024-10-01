@@ -2,6 +2,7 @@ import os
 import random
 import sys
 import pygame as pg
+import time
 
 
 WIDTH, HEIGHT = 1100, 650
@@ -19,6 +20,24 @@ def check_bound(obj_rct:pg.Rect) -> tuple[bool, bool]:
         tate = False
     return yoko, tate
 
+def Gameover(screen):
+    black = pg.Surface((WIDTH,HEIGHT))
+    pg.draw.rect(black,(0,0,0),(0,0,WIDTH,HEIGHT))
+    black.set_alpha(128)
+    screen.blit(black,[0,0])
+    fonto = pg.font.Font(None, 80)
+    txt = fonto.render("Gameover",True, (255,255,255))
+    txtrct = txt.get_rect()
+    txtrct.center = (WIDTH/2,HEIGHT/2)
+    screen.blit(txt, txtrct)
+    cry_kk_img = pg.transform.rotozoom(pg.image.load("fig/8.png"), 0, 1.2)
+    cry_kk_rct = cry_kk_img.get_rect()
+    cry_kk_rct.center = (WIDTH/2,HEIGHT/2)
+    screen.blit(cry_kk_img, [cry_kk_rct[0]-250,cry_kk_rct[1]])
+    screen.blit(cry_kk_img, [cry_kk_rct[0]+250,cry_kk_rct[1]])
+    pg.display.update()
+    time.sleep(5)
+    
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
@@ -41,7 +60,8 @@ def main():
                 return
         screen.blit(bg_img, [0, 0]) 
         if kk_rct.colliderect(bb_rct):
-            break
+            Gameover(screen)
+            return
         key_lst = pg.key.get_pressed()
         sum_mv = [0, 0]
         #if key_lst[pg.K_UP]:
